@@ -10,48 +10,41 @@ $(function() {
 		$button.hide();
 	});
 
-	$button.click(stopwatch.start);
+	$button.click(timeClock.start);
 });
 
 
-//Start timer
-//function timer()	{
-//	clearTimeout(timeout);
-
-//	var timeout = setTimeout(function(){
-//		$('form').hide();
-//	}, 1000 * 60);
-//};
-
+//Start and display timer
 var intervalId;
 
-//prevents the clock from being sped up unnecessarily
 var clockRunning = false;
 
-//  Our stopwatch object.
-var stopwatch = {
+
+var timeClock = {
 
   time: 60,
 
   start: function() {
 
       if (!clockRunning) {
-        intervalId = setInterval(stopwatch.count, 1000);
+        intervalId = setInterval(timeClock.count, 1000);
        clockRunning = true;
       }
 
   },
   stop: function() {
-  	
+  		
   		clearInterval(intervalId);
     	clockRunning = false;	
+    	$('form').hide();
+    	console.log("time up");
   },
 
   count: function() {
 
-        stopwatch.time--;
+        timeClock.time--;
 
-        var converted = stopwatch.timeConverter(stopwatch.time);
+        var converted = timeClock.timeConverter(timeClock.time);
 
         $("#time-clock").html(converted);
   },
@@ -66,11 +59,11 @@ var stopwatch = {
     }
 
     if (minutes === 0) {
-      minutes = "00";
+     minutes = "00";
     }
 
     else if (minutes < 10) {
-      minutes = "0" + minutes;
+     minutes = "0" + minutes;
     }
 
     return minutes + ":" + seconds;
@@ -78,16 +71,59 @@ var stopwatch = {
 
 };
 
-//Display timer
-
-
 //Display trivia questions and answer radio buttons
+var trivia = [
+		{
+			question: "What is the name of the actress who plays Hermione Granger in the Harry Potter series of films?",
+			answer: "Emma Watson",
+			choices: ["Natalie Portman", "Emma Watson", "Emma Roberts"]
+			},
+		 {
+			question: "Which is not one of the four houses at Hogwarts School of Witchcraft and Wizardry?",
+			answer: "Thunderbird",
+			choices: ["Gryffindor","Slytherin", "Thunderbird"]
+	
+			},
+		 {
+			question: "In what year was the first Harry Potter movie released?",
+			answer: "2001",
+			choices: ["2001", "1997", "1999"]
+			},
+		 {
+			question: "What is the name of Harry Potter's Owl?",
+			answer: "Hedwig",
+			choices: ["Errol", "Crookshanks", "Hedwig"]
+			},
+		 {
+			question: "Which of these objects is not a component of the Deathly Hallows?",
+			answer: "Sorcerer's Stone",
+			choices: ["Elder Wand", "Sorcerer's Stone", "Resurrection Stone"]
+			}
+	
+];
 
+var correctAnswers = 0;
+
+function displayQuestion() {
+	var questions = trivia.question;
+	var questionClass = $(document).find(".container > #question");
+	var choiceList = $(document).find(".container > .choiceList");
+	var numChoices = trivia.choices.length;
+
+	$(questionClass).text(question);
+
+	var choice;
+	for (i = 0; i < numChoices; i++) {
+		choice = trivia.choices[i];
+		$('<li><input type="radio" value=' + i + ' name="dynradio" />' + choice + '</li>').appendTo(choiceList);
+	}
+
+}
 
 //Save input from radio buttons
 
 //When timer ends, hide form
-
+setTimeout(timeClock.stop, 1000 * 60);
 //Compare answers with input
 
 //Show results
