@@ -1,0 +1,39 @@
+@font-face {
+    font-family: 'Harry-Potter';
+    src:url('assets/images/webfonts_Harry-Potter/Harry-Potter.ttf.woff') format('woff'),
+        url('assets/images/webfonts_Harry-Potter/Harry-Potter.ttf.svg#Harry-Potter') format('svg'),
+        url('assets/images/webfonts_Harry-Potter/Harry-Potter.ttf.eot'),
+        url('assets/images/webfonts_Harry-Potter/Harry-Potter.ttf.eot?#iefix') format('embedded-opentype'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+h1 {
+	font-family: 'Harry-Potter';
+	font-size: 46px;
+	margin: auto;
+	text-align: center;
+}
+
+body {
+	background: url('../images/HP_Background.png');
+	font-size: 16px;
+	color: #dddddd;
+}
+
+.container {
+	width: 100%;
+	max-width: 800px;
+	margin: 0 auto;
+	margin-top: 40px;
+	background: #2F2B35;
+	padding: 30px;
+	height: 550px;
+}
+
+#start-button {
+	font-size: 36px;
+	background: #dddddd;
+	width: 200px;
+}

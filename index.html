@@ -4,22 +4,26 @@
 		<meta harset="UTF-8">
 		<title>Trivia Game</title>
 		<link rel="stylesheet" type="text/css" href="">
-		<link rel="stylesheet" type="text/css" href="">
+		<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
 		<script src="assets/javascript/app.js"></script>
 	</head>
 <body>
 
-<div id="container">
+<div class="container">
 	<div id="land-page">
-		<h1>Totally Trivial Trivia</h1>
+		<h1>Harry Potter Trivia</h1>
 			<button id="start-button">Start</button>
 	</div>
 
-		<form id="random"> 
+		<form class="trivia-body"> 
 			<div>Time Remaining <div id="time-clock"></div></div>
-			<div id="qaSection"></div>
+			<div id="question"></div>
+			<ul class="choiceList"></ul>
+			<div id="error-message"></div>
 		</form>
+
+		<div class="trivia-over"></div>
 
 
 

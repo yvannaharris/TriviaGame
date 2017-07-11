@@ -1,131 +1,158 @@
+
+
+$(document).ready(function(){
 //Hide trivia form
-$(function() {
-	$('form').hide();
-	var $button = $('button');
-	//Start button click event
-	$button.on('click', function(){
-		//Show trivia form
-		$('form').show();
-		//Hide start button
-		$button.hide();
+	$(function() {
+		$('form').hide();
+		$(".trivia-over").hide();
+		var $button = $('button');
+		//Start button click event
+		$button.on('click', function(){
+			//Show trivia form
+			$('form').show();
+			displayQuestion();
+			//Hide start button
+			$button.hide();
+		});
+
+		$button.click(timeClock.start);
 	});
 
-	$button.click(timeClock.start);
-});
+
+	//Start and display timer
+	var intervalId;
+
+	var clockRunning = false;
 
 
-//Start and display timer
-var intervalId;
+	var timeClock = {
 
-var clockRunning = false;
+	  time: 60,
 
+	  start: function() {
 
-var timeClock = {
+	      if (!clockRunning) {
+	        intervalId = setInterval(timeClock.count, 1000);
+	       clockRunning = true;
+	      }
 
-  time: 60,
+	  },
+	  stop: function() {
+	  		
+	  		clearInterval(intervalId);
+	    	clockRunning = false;	
+	    	$('form').hide();
+	    	console.log("time up");
+	  },
 
-  start: function() {
+	  count: function() {
 
-      if (!clockRunning) {
-        intervalId = setInterval(timeClock.count, 1000);
-       clockRunning = true;
-      }
+	        timeClock.time--;
 
-  },
-  stop: function() {
-  		
-  		clearInterval(intervalId);
-    	clockRunning = false;	
-    	$('form').hide();
-    	console.log("time up");
-  },
+	        var converted = timeClock.timeConverter(timeClock.time);
 
-  count: function() {
+	        $("#time-clock").html(converted);
+	  },
 
-        timeClock.time--;
+	  timeConverter: function(t) {
 
-        var converted = timeClock.timeConverter(timeClock.time);
+	    var minutes = Math.floor(t / 60);
+	    var seconds = t - (minutes * 60);
 
-        $("#time-clock").html(converted);
-  },
+	    if (seconds < 10) {
+	      seconds = "0" + seconds;
+	    }
 
-  timeConverter: function(t) {
+	    if (minutes === 0) {
+	     minutes = "00";
+	    }
 
-    var minutes = Math.floor(t / 60);
-    var seconds = t - (minutes * 60);
+	    else if (minutes < 10) {
+	     minutes = "0" + minutes;
+	    }
 
-    if (seconds < 10) {
-      seconds = "0" + seconds;
-    }
+	    return minutes + ":" + seconds;
+	  }
 
-    if (minutes === 0) {
-     minutes = "00";
-    }
+	};
 
-    else if (minutes < 10) {
-     minutes = "0" + minutes;
-    }
+	//Display trivia questions and answer radio button
 
-    return minutes + ":" + seconds;
-  }
-
-};
-
-//Display trivia questions and answer radio buttons
 var trivia = [
 		{
 			question: "What is the name of the actress who plays Hermione Granger in the Harry Potter series of films?",
-			answer: "Emma Watson",
+			answer: 2,
 			choices: ["Natalie Portman", "Emma Watson", "Emma Roberts"]
 			},
 		 {
 			question: "Which is not one of the four houses at Hogwarts School of Witchcraft and Wizardry?",
-			answer: "Thunderbird",
+			answer: 3,
 			choices: ["Gryffindor","Slytherin", "Thunderbird"]
 	
 			},
 		 {
 			question: "In what year was the first Harry Potter movie released?",
-			answer: "2001",
+			answer: 1,
 			choices: ["2001", "1997", "1999"]
 			},
 		 {
 			question: "What is the name of Harry Potter's Owl?",
-			answer: "Hedwig",
+			answer: 3,
 			choices: ["Errol", "Crookshanks", "Hedwig"]
 			},
 		 {
 			question: "Which of these objects is not a component of the Deathly Hallows?",
-			answer: "Sorcerer's Stone",
+			answer: 2,
 			choices: ["Elder Wand", "Sorcerer's Stone", "Resurrection Stone"]
 			}
 	
 ];
 
-var correctAnswers = 0;
+	var correctAnswers = 0;
 
-function displayQuestion() {
-	var questions = trivia.question;
-	var questionClass = $(document).find(".container > #question");
-	var choiceList = $(document).find(".container > .choiceList");
-	var numChoices = trivia.choices.length;
 
-	$(questionClass).text(question);
+	var displayQuestion = function() {
+		var questions = trivia.question;
+		var questionClass = $(document).find(".container > .trivia-body > question");
+		var choiceList = $(document).find(".container > .triva-body > .choiceList");
+		var numChoices = trivia.choices.length;
 
-	var choice;
-	for (i = 0; i < numChoices; i++) {
-		choice = trivia.choices[i];
-		$('<li><input type="radio" value=' + i + ' name="dynradio" />' + choice + '</li>').appendTo(choiceList);
+		$(questionClass).text(question);
+
+		var choice;
+		for (i = 0; i < numChoices; i++) {
+			choice = trivia.choices[i];
+			$('<li><input type="radio" value=' + i + ' name="dynradio" />' + choice + '</li>').appendTo(choiceList);
+		}
+
 	}
 
-}
+	//Save input from radio buttons
+	var finalAnswer = function() {
+		value = $("input[type='radio']:checked").val();
 
-//Save input from radio buttons
+		if(value == undefined) {
+			$("#error-message").text("Please select an answer to all questions to continue.");
+		} else {
+			//Compare answers with input
+			if(value == trivia.answer) {
+				correctAnswers++;
+			}
+		}
+	}
+	//When timer ends, hide form
+	setTimeout(timeClock.stop, 1000 * 60);
 
-//When timer ends, hide form
-setTimeout(timeClock.stop, 1000 * 60);
-//Compare answers with input
+	//Show results
+	var score = function() {
+		$(".trivia-over").text("You got " + correctAnswers + " answers correct! " + (correctAnswers * 5) + " points for Gryffindor!");
+		$(".trivia-over").show();
+	}
 
-//Show results
-
-//When "finish" button is clicked compare answers and show results
+	//When "finish" button is clicked compare answers and show results
+		$("#finish-button").on('click', function() {
+			$('form').hide();
+			score();
+		});
+	
+});
